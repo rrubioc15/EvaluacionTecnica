@@ -1,0 +1,245 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewData["Title"] - Olimpiadas</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="~/lib/fontawesome-free/dist/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/lib/adminlte/dist/css/adminlte.min.css">
+    <!-- Toaster style -->
+    <link rel="stylesheet" href="~/plugins/toastr/toastr.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/plugins/select2/css/select2.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="~/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <link href="~/css/site.css" rel="stylesheet" />
+
+    <link rel="shortcut icon" href="~/favicon.ico" />
+
+    @RenderSection("Styles", required: false)
+</head>
+
+<body class="hold-transition sidebar-mini text-sm sidebar-collapse">
+    <div class="wrapper">
+        <!-- Navbar navbar-white -->
+        <nav class="main-header navbar navbar-expand navbar-dark">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+            <!-- Right navbar links -->
+            <partial name="_LoginPartial" />
+
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo style="opacity: .8" -->
+            <a asp-controller="Home" asp-action="Index" class="brand-link">
+                <img src="~/img/logo-jo.png" alt="Logo Olimpiadas" class="brand-image-xs" id="logo" style="margin-left: 75px">
+                <br />
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                
+                <!-- SidebarSearch Form -->
+                <div class="form-inline">
+                    <div class="input-group" data-widget="sidebar-search">
+                        <input class="form-control form-control-sidebar" type="search" placeholder="Buscar" aria-label="Search">
+                        <div class="input-group-append">
+                            <button class="btn btn-sidebar">
+                                <i class="fas fa-search fa-fw"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> <!-- Sidebar Menu -->
+
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                        with font-awesome or any other icon font library -->
+                        <li class="nav-item menu-open">
+                            <!--menu-open-->
+                            <a href="#" class="nav-link">
+                                <!-- active-->
+                                <i class="nav-icon fas fa-home"></i>
+                                <p>
+                                    Home
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a asp-controller="Home" asp-action="Index" class="nav-link">
+                                        <!-- active-->
+                                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                                        <p>Tablero de Control</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Organization" asp-action="ItemOrganization" class="nav-link">
+                                        <i class="nav-icon fas fa-cubes"></i>
+                                        <p>Jerarquía de Equipos</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="WorkOrder" asp-action="WorkOrderRecord" class="nav-link">
+                                        <i class="nav-icon fas fa-file-signature"></i>
+                                        <p>Historial de Work Orders</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a asp-controller="Incident" asp-action="Incidents" class="nav-link">
+                                        <i class="nav-icon fas fa-tools"></i>
+                                        <p>Incidencias</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav> <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            @*<h1 class="m-0">@ViewData["Title"]</h1>*@
+                        </div><!-- /.col -->
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <!-- Breadcrumb Section -->
+                                @await RenderSectionAsync("Breadcrumb", required: false)
+                            </ol>
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <div class="content">
+                <div class="container-fluid">
+                    @RenderBody()
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+            <div class="p-3">
+                <h5>Title</h5>
+                <p>Sidebar content</p>
+            </div>
+        </aside>
+        <!-- /.control-sidebar -->
+        <!-- Main Footer -->
+        <footer class="main-footer">
+            <!-- To the right -->
+            <div class="float-right d-none d-sm-inline">
+                Netafim IT Department
+            </div>
+            <!-- Default to the left -->
+            <strong>Copyright &copy; 2023.</strong> All rights reserved.
+        </footer>
+    </div>
+    <!-- ./wrapper -->
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/lib/adminlte/dist/js/adminlte.min.js"></script>
+    <!-- Toastr Script -->
+    <script src="~/plugins/toastr/toastr.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/plugins/select2/js/select2.full.min.js"></script>
+    <!-- Utils -->
+    <script src="~/views/utils.js"></script>
+    <link href="~/css/site.css" rel="stylesheet" />
+
+
+    <script type="text/javascript">
+        // General layout page setup
+        (function () {
+            /* ==== Global Ajax Handler ====*/
+            function globalAjaxErrorHandler(e, jqxhr, settings, exception) {
+                /* Check response undefined/null or we will get an uncaught issue in the
+                 * console and the flow will interrupt
+                 */
+                if (jqxhr.responseText == null) return false;
+
+                var errInfo = jQuery.parseJSON(jqxhr.responseText);
+
+                $(document).Toasts('create', {
+                    class: 'bg-danger',
+                    title: errInfo.actionTitle,
+                    autohide: true,
+                    delay: 10000,
+                    body: errInfo.errorMessage
+                })
+            }
+
+            $(document).ajaxError(globalAjaxErrorHandler);
+
+            $.ajaxSetup({ cache: false });
+
+            /* ==== Ajax Status clock animation  ====*/
+            var loadingDiv = $('.loadingDiv').hide();
+            $(document).ajaxStart(function () {
+                $(loadingDiv).show();
+            }).ajaxStop(function () {
+                $(loadingDiv).hide();
+            });
+        })();
+
+        (function() {
+            const idleDurationSecs = 1800;    // X number of seconds
+            const redirectUrl = '@Url.Content("~/Login/Logout")';  // Redirect idle users to this URL
+            let idleTimeout; // variable to hold the timeout, do not modify
+
+            const resetIdleTimeout = function() {
+
+                // Clears the existing timeout
+                if(idleTimeout) clearTimeout(idleTimeout);
+
+                // Set a new idle timeout to load the redirectUrl after idleDurationSecs
+                idleTimeout = setTimeout(() => location.href = redirectUrl, idleDurationSecs * 1000);
+            };
+
+            // Init on page load
+            resetIdleTimeout();
+
+            // Reset the idle timeout on any of the events listed below
+            ['click', 'touchstart', 'mousemove'].forEach(evt =>
+                document.addEventListener(evt, resetIdleTimeout, false)
+            );
+
+         })();
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

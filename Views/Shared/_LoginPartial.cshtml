@@ -1,0 +1,51 @@
+﻿@*@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager*@
+
+<!-- Right navbar links -->
+<ul class="nav navbar-nav ml-auto">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <!-- User Account Dropdown -->
+        <li class="nav-item dropdown user user-menu">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                <img src="~/img/avatar5.png" class="user-image" alt="User Image">
+                <span class="d-none d-md-inline">@User.Identity.Name</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                <!-- User Image -->
+                <li class="user-header">
+                    <img src="~/img/avatar5.png" class="img-circle" alt="User Image">
+                    <p>
+                        Administrador
+                    </p>
+                    <small>Sistema de gestión de olimpiadas</small>
+                </li>
+                
+                <!-- User Menu footer btn-flat -->
+                <li class="user-footer">
+                    <div class="fa-pull-right">
+                        <a asp-controller="Login" asp-action="Logout" class="btn btn-danger btn-block">
+                           Cerrar sesión
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </li>
+
+        <!-- User Account Dropdown  user user-menu -->
+        @*<li class="nav-item">
+            <div class="info">
+                <a asp-controller="Login" asp-action="Logout" class="d-block">
+                    <span class="nav-link d-hidden-mini">Cerrar sesión</span>
+                </a>
+            </div>
+        </li>*@
+    }
+
+@*    <li class="nav-item">
+        <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button">
+            <i class="fas fa-th-large"></i>
+        </a>
+    </li>*@
+</ul>

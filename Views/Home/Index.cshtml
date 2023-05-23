@@ -1,8 +1,267 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@section Styles
+    {
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/css/dataTableCustom.css">
+
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/plugins/daterangepicker/daterangepicker.css">
+    <link href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+
+    <style>
+        .dataTables_filter {
+            float: right !important;
+            margin-bottom: 15px !important;
+        }
+    </style>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@{
+    ViewData["Title"] = "Tablero de Control";
+}
+
+<div class="container-fluid">
+    <h1>Monitor de Activos</h1>
+    <br />
+    <div class="card collapsed-card" id="cardDashboard">
+        <div class="card-header">
+            <h3 class="card-title" style="font-weight:500;" id="tituloFiltros">Filtros de búsqueda</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                    <i class="fas fa-plus" id="iconoDashboard"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="form-group col-md-4 ">
+                    <label for="cboCustomer">Cliente: </label>
+                    &nbsp;<a style="cursor:pointer;" onclick="clsCustomer();"><i class="fas fa-sync-alt"></i></a>
+                    <select id="cboCustomer" name="cboCustomer" class="form-control form-control-sm">
+                        @*<option value="@ViewBag.CustomerId" selected="selected">@(ViewBag.CustomerId + " " + ViewBag.CustomerName)</option>*@
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cboField">Fundo: </label>
+                    &nbsp;<a style="cursor:pointer;" onclick="clsField();"><i class="fas fa-sync-alt"></i></a>
+                    <select id="cboField" name="cboField" class="form-control form-control-sm">
+                        @*<option value="@ViewBag.FieldName" selected="selected">@ViewBag.FieldName</option>*@
+                    </select>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="cboStand">Caseta: </label>
+                    &nbsp;<a style="cursor:pointer;" onclick="clsStand();"><i class="fas fa-sync-alt"></i></a>
+                    <select id="cboStand" name="cboStand" class="form-control form-control-sm">
+                        @*<option value="@ViewBag.StandName" selected="selected">@ViewBag.StandName</option>*@
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4">
+                    <label for="cboSystem">Sistema: </label>
+                    &nbsp;<a style="cursor:pointer;" onclick="clsSystem();"><i class="fas fa-sync-alt"></i></a>
+                    <select id="cboSystem" name="cboSystem" class="form-control form-control-sm">
+                        @*<option value="@ViewBag.SystemId" selected="selected">@(ViewBag.SystemId + " " + ViewBag.SystemName)</option>*@
+                    </select>
+                </div>
+                <div class="form-group col-md-1">
+                    <label for="txtNumber">Núm: </label>
+                    &nbsp;<a style="cursor:pointer;" onclick="clsItem();"><i class="fas fa-sync-alt"></i></a>
+                    <input id="txtNumber" class="form-control text-sm" type="text" placeholder="N°" value="@ViewBag.ItemNumber">
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="txtItem">Equipo: </label>
+                    <input id="txtItem" class="form-control text-sm" type="text" placeholder="Ingrese el nombre del equipo" value="@ViewBag.ItemDescription">
+                </div>
+                <div class="form-group col-md-2 ">
+                    <label for="txtDateFrom">Desde: </label>
+                    <input id="txtDateFrom" class="form-control datepicker2 text-sm" placeholder="yyyy-mm-dd" maxlength="10" value="@ViewBag.DateFrom">
+                </div>
+                <div class="form-group col-md-2 ">
+                    <label for="txtDateTo">Hasta: </label>
+                    <input id="txtDateTo" class="form-control datepicker2 text-sm" placeholder="yyyy-mm-dd" maxlength="10" value="@ViewBag.DateTo">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-6 my-1">
+                    <button type="button" class="btn btn-secondary" onclick="limpiarFiltros();">Limpiar</button>
+                    <button type="button" class="btn btn-primary" data-card-widget="collapse" onclick="cargarDashboard();">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 mb-2 text-center">
+        <div id="loader" class="overlay loadingDiv" style="display:none"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
+    </div>
+
+    <br />
+    <!-- Small boxes (Stat box) -->
+    <div class="row">
+        <!-- ./col -->
+        <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+                <div class="inner">
+                    <h3 id="txtEquiposRevisionAlDia">&nbsp;</h3>
+                    <p>Equipos con revisiones al día</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a style="cursor: pointer;" onclick="verMas(1)" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+                <div class="inner">
+                    <h3 id="txtEquiposRevisionProxima">&nbsp;</h3>
+                    <p>Equipos con inspecciones próximas</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-folder"></i>
+                </div>
+                <a style="cursor: pointer;" onclick="verMas(2)" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-4 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+                <div class="inner">
+                    <h3 id="txtEquiposRevisionAtrasada">&nbsp;</h3>
+                    <p>Equipos con revisión atrasada</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-pie-graph"></i>
+                </div>
+                <a style="cursor: pointer;" onclick="verMas(3)" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+    <!-- /.row -->
+    <!-- Main row -->
+    <div class="row">
+
+        <!-- Left col -->
+        <section class="col-lg-7">
+
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="ion ion-clipboard mr-1"></i>
+                        Repuestos a solicitar
+                    </h3>
+                </div>
+
+                <div class="card-body">
+                    <button hidden id="btnCsvExport" class="btn btn-primary btn-xs"><i class="fas fa-file-csv"></i> Exportar a Csv</button>
+                    <table id="spareTable" class="table table-condensed table-bordered table-hover display " style="width: 100%;">
+                        <thead>
+                            <tr hidden>
+                                <th style='text-align:center;'>Repuestos a solicitar</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section class="col-lg-5">
+            <!-- Calendar -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="far fa-calendar-alt"></i>
+                        Calendario próximas actividades
+                    </h3>
+                </div>
+
+                <div class="card-body pt-0">
+                    <div id="calendar" style="width: 100%">
+                        @*<div class="bootstrap-datetimepicker-widget usetwentyfour" id="calendar">
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
 </div>
+
+<div id="modalWorkOrders" class="modal fade" role="dialog" aria-hidden="true" style="display: none; overflow: scroll;">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 id="tituloWo" class="modal-title">Work Orders - Fecha</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12 col-12 d-flex justify-content-end" id="btnDetail">
+                    @*<a class="btn btn-primary ml-auto">Ver W.O.</a>*@
+                </div>
+                <div class="col-md-12">
+                    <table id="indexTable" class="table table-condensed table-bordered table-hover table-striped table-sm display nowrap" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style='text-align:center;'>WorkOrderId</th>
+                                <th style='text-align:center;'>Fecha</th>
+                                <th style='text-align:center;'>Estado</th>
+                                <th style='text-align:center;'>Comentario</th>
+                                <th style='text-align:center;'>CR</th>
+                                <th style='text-align:center;'>Equipo</th>
+                                <th style='text-align:center;'>Sistema</th>
+                                <th style='text-align:center;'>Caseta</th>
+                                <th style='text-align:center;'>Fundo</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            @*            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" onclick="finalizarwo();">finalizar</button>
+            </div>*@
+        </div>
+    </div>
+</div>
+
+@section Scripts
+    {
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- daterangepicker -->
+    <script src="~/plugins/moment/moment.min.js"></script>
+    <script src="~/plugins/daterangepicker/daterangepicker.js"></script>
+
+    <!-- DataTables  & Plugins -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+    <!-- View automation code -->
+
+    <script src="~/views/index.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            docStart('@Url.Content("~/")');
+            cargarDashboard();
+
+        });
+
+    </script>
+}
