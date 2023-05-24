@@ -43,7 +43,8 @@ namespace EvaluacionTecnica.Controllers
 
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.Correo)
+                    new Claim(ClaimTypes.Name, user.Correo),
+                    new Claim("UsuarioId", user.UsuarioId.ToString())
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -61,7 +62,7 @@ namespace EvaluacionTecnica.Controllers
             }
             else
             {
-                ViewData["Mensaje"] = "Usuario o contraseña incorrectos. ";
+                ViewData["Mensaje"] = "Correo o contraseña incorrectos. ";
                 return View();
             }
         }

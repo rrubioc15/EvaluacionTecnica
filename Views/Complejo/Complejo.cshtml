@@ -1,0 +1,161 @@
+﻿@section Styles {
+
+    <link href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="~/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/css/dataTableCustom.css">
+
+    <link href="~/plugins/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+    <style>
+        .dataTables_filter {
+            float: right !important;
+            margin-bottom: 15px !important;
+        }
+
+        .dt-toolbar {
+            float: left !important;
+            margin-bottom: 15px !important;
+            color: white;
+        }
+
+        .headWorkOrder {
+            background-color: #5A6268;
+            color: white;
+        }
+
+        table.dataTable tbody {
+            background-color: #F4F6F9; /* Cambia #a4c639 por el color que desees */
+        }
+
+        .disabled {
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+    </style>
+}
+
+@{
+    ViewData["Title"] = "Complejos";
+}
+
+<div class="col-12">
+
+    <h1>COMPLEJOS DEPORTIVOS</h1>
+    <br />
+
+    <btn class="btn btn-success" onclick="verModalSede();"> Registrar complejo</btn>
+
+</div>
+
+<div class="col-12 mb-2 text-center">
+    <div id="loader" class="overlay loadingDiv"><i class="fas fa-2x fa-sync-alt fa-spin"></i></div>
+</div>
+
+<br />
+<div class="col-md-12">
+    <table id="sedeTable" class="table table-bordered table-hover table-sm display nowrap" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style='text-align:center;'>Id</th>
+                <th style='text-align:center;'>Nombre</th>
+                <th style='text-align:center;'>Sede</th>
+                <th style='text-align:center;'>Localización</th>
+                <th style='text-align:center;'>Jefe</th>
+                <th style='text-align:center;'>Area Total</th>
+                <th style='text-align:center;'>Acciones</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+<br />
+
+
+<div id="modalFormSede" class="modal fade" role="dialog" aria-hidden="true" style="display: none; overflow: scroll;">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="txtTitulo"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row" hidden>
+                    <div class="form-group col-md-6">
+                        <label for="txtSedeId">SedeId: </label>
+                        <input id="txtSedeId" class="form-control text-sm" type="text" disabled>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-md-6 ">
+                        <label for="txtNombre">Nombre: </label>
+                        <input type="text" class=" form-control text-sm" id="txtNombre" name="nombre" placeholder="Ingrese el nombre" />
+                    </div>
+                    <div class="form-group col-md-6 ">
+                        <label for="txtUbicacion">Ubicación: </label>
+                        <input type="text" class=" form-control text-sm" id="txtUbicacion" name="ubicacion" placeholder="Ingrese la ubicación" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6 ">
+                        <label for="txtComplejos">N° Complejos: </label>
+                        <input type="number" class=" form-control text-sm" id="txtComplejos" name="nroComplejos" placeholder="Ingrese la cantidad" />
+                    </div>
+                    <div class="form-group col-md-6 ">
+                        <label for="txtPresupuesto">Presupuesto: </label>
+                        <input type="number" class=" form-control text-sm" id="txtPresupuesto" name="presupuesto" placeholder="Ingrese el presupuesto" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-success" onclick="guardarSede();">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts
+    {
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- DataTables  & Plugins -->
+    <script src="~/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Moment -->
+    <script src="~/plugins/moment/moment.min.js"></script>
+
+    <script src="~/plugins/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/plugins/datatables/ellipsis.js"></script>
+    <script src="~/plugins/throttle-debounce/jquery.ba-throttle-debounce.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- ScriptJs -->
+    <script src="~/js/sede.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            docStart('@Url.Content("~/")');
+
+            loadSedes();
+
+        });
+
+    </script>
+
+
+}

@@ -18,8 +18,8 @@
         public Usuario() { 
         
             UsuarioId = 0;
-            Correo = "";
-            Clave = "";
+            Correo = string.Empty;
+            Clave = string.Empty;
             Estado = 0;
             UsuarioCreacion = 0;
             FechaCreacion = null;
