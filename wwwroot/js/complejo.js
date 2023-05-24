@@ -207,7 +207,7 @@ function guardarComplejo() {
                     $(document).Toasts('create', {
                         class: 'bg-success',
                         title: "Registro de complejos",
-                        body: "Se guardó correctamente los datos del complejo. ",
+                        body: "Se guardo correctamente los datos del complejo. ",
                         autohide: true,
                         delay: 3000,
                         fade: true
@@ -243,7 +243,7 @@ function guardarComplejo() {
 function eliminarComplejo(ComplejoId) {
 
     Swal.fire({
-        title: '¿Esta seguro de eliminar este registro?',
+        title: 'Esta seguro de eliminar este registro?',
         text: "No se podra revertir el cambio.",
         icon: 'warning',
         showCancelButton: true,
