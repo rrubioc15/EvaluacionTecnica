@@ -45,7 +45,7 @@ namespace EvaluacionTecnica.Controllers
         [HttpPost()]
         public IActionResult SaveSede(int SedeId, string Nombre, string Ubicacion, int Complejos, float Presupuesto)
         {
-            RouteData.Values["ActionTitle"] = "Creación de sedes";
+            RouteData.Values["ActionTitle"] = "Guardar sedes";
 
             ClaimsPrincipal claimUser = HttpContext.User;
             var usuarioId = Utility.GetUsuarioId(claimUser.Claims);

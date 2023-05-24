@@ -1,13 +1,15 @@
-ï»¿//RUTA GLOBAL
+//RUTA GLOBAL
 var sPath;
-var sedeTable;
+var complejoTable;
 
 function docStart(ruta) {
 
     //Obtenemos la ruta global
     sPath = ruta;
 
-    sedeTable = $('#sedeTable').DataTable({
+    select2.iniciar();
+
+    complejoTable = $('#complejoTable').DataTable({
         "scrollX": true,
         "autowidth": true,
         "order": [0, "asc"],
@@ -26,7 +28,7 @@ function docStart(ruta) {
             "sLoadingRecords": "Cargando...",
             "oPaginate": {
                 "sFirst": "Primero",
-                "sLast": "Ãšltimo",
+                "sLast": "Último",
                 "sNext": "Siguiente",
                 "sPrevious": "Anterior"
             },
@@ -36,39 +38,33 @@ function docStart(ruta) {
             }
         },
         "columns": [
-            { "data": "sede_id" },
+            { "data": "complejo_id" },
             { "data": "nombre" },
-            { "data": "ubicacion" },
-            { "data": "nro_complejos" },
+            { "data": "sede" },
+            { "data": "localizacion" },
+            { "data": "jefe" },
+            { "data": "area_total" },
             {
-                "data": "presupuesto",
-                "render": function (data, type, row) {
-                    return "S/" +  data;
-                }
-            },
-            {
-                "data": "sede_id",
+                "data": "complejo_id",
                 "render": function (data, type, row) {
 
-                    return '<a onclick="verModalSede(\'' + data + '\');" title="Editar sede" style="cursor: pointer; ">' +
-                        '<i class="fas fa-edit" style="color:#DEB801;"></i></a>&nbsp;<a onclick="eliminarSede(\'' + data + '\');" ' +
-                        'title="Eliminar sede" style="cursor: pointer; "><i class="fas fa-trash" style="color:#DC3545;"></i></a>';
-                        
+                    return '<a onclick="verModalComplejo(\'' + data + '\');" title="Editar complejo" style="cursor: pointer; ">' +
+                        '<i class="fas fa-edit" style="color:#DEB801;"></i></a>&nbsp;<a onclick="eliminarComplejo(\'' + data + '\');" ' +
+                        'title="Eliminar complejo" style="cursor: pointer; "><i class="fas fa-trash" style="color:#DC3545;"></i></a>';
+
                 }
             },
         ],
         "columnDefs": [
             {
-                "targets": [0, 3, 4, 5],
+                "targets": [0, 3, 5, 6],
                 className: 'text-center'
             }
         ],
         "destroy": true
     });
-}
 
-function loadSedes() {
-
+    //Inicializamos los combos
     data = {
         "SedeId": 0
     }
@@ -80,42 +76,72 @@ function loadSedes() {
         data: data,
         async: true,
         success: function (resultado) {
-            visualizarSedes(resultado);
+            select2.cargarSeleccione('cboSede', resultado, 'sede_id', 'nombre', 'Seleccione una sede');
+        }
+    });
+
+    $.ajax({
+        type: "POST",
+        url: sPath + "Complejo/ListarJefes",
+        dataType: "json",
+        data: data,
+        async: true,
+        success: function (resultado) {
+            select2.cargarSeleccione('cboJefe', resultado, 'jefe_id', 'nombre', 'Seleccione un jefe');
         }
     });
 }
 
-function visualizarSedes(data) {
+function loadComplejos() {
 
-    sedeTable.clear().draw();
-    sedeTable.rows.add(data).draw();
-    sedeTable.columns.adjust().draw();
+    data = {
+        "ComplejoId": 0
+    }
+
+    $.ajax({
+        type: "POST",
+        url: sPath + "Complejo/Listar",
+        dataType: "json",
+        data: data,
+        async: true,
+        success: function (resultado) {
+            visualizarComplejos(resultado);
+        }
+    });
+}
+
+function visualizarComplejos(data) {
+
+    complejoTable.clear().draw();
+    complejoTable.rows.add(data).draw();
+    complejoTable.columns.adjust().draw();
 
 }
 
-function verModalSede(SedeId) {
+function verModalComplejo(ComplejoId) {
 
     $("#txtTitulo").empty();
 
-    $("#txtSedeId").val('');
-    $("#txtSedeId").val(SedeId);
+    $("#txtComplejoId").val('');
+    $("#txtComplejoId").val(ComplejoId);
 
     $("#txtNombre").val('');
-    $("#txtUbicacion").val('');
-    $("#txtComplejos").val('');
-    $("#txtPresupuesto").val('');
+    $("#cboSede").val('0');
+    $("#txtLocalizacion").val('');
+    $("#cboJefe").val('0');
+    $("#txtArea").val('');
 
-    if (!isEmpty(SedeId)) {
+    if (!isEmpty(ComplejoId)) {
 
-        $("#txtTitulo").text("EDITAR SEDE");
+        $("#txtTitulo").text("EDITAR COMPLEJO");
 
         data = {
-            "SedeId": SedeId
+            "ComplejoId": ComplejoId
         }
 
         $.ajax({
             type: "POST",
-            url: sPath + "Sede/Listar",
+            url: sPath + "Complejo/Listar",
             dataType: "json",
             data: data,
             success: function (data) {
@@ -123,15 +149,16 @@ function verModalSede(SedeId) {
                 if (!isEmpty(data)) {
 
                     $("#txtNombre").val(data[0].nombre);
-                    $("#txtUbicacion").val(data[0].ubicacion);
-                    $("#txtComplejos").val(data[0].nro_complejos);
-                    $("#txtPresupuesto").val(data[0].presupuesto);
+                    $("#cboSede").val(data[0].sede_id);
+                    $("#txtLocalizacion").val(data[0].localizacion);
+                    $("#cboJefe").val(data[0].jefe_id);
+                    $("#txtArea").val(data[0].area_total);
 
                 } else {
                     $(document).Toasts('create', {
                         class: 'bg-warning',
                         title: "Error al obtener la data.",
-                        body: "No se pudo obtener la informaciÃ³n de la sede seleccionada. ",
+                        body: "No se pudo obtener la información del complejo seleccionado. ",
                         autohide: true,
                         delay: 3000,
                         fade: true
@@ -141,33 +168,36 @@ function verModalSede(SedeId) {
         });
 
     } else {
-        $("#txtTitulo").text("REGISTRAR NUEVA SEDE");
+        $("#txtTitulo").text("REGISTRAR NUEVO COMPLEJO");
     }
 
-    $("#modalFormSede").modal("show");
+    $("#modalFormComplejo").modal("show");
 }
 
-function guardarSede() {
 
-    var sedeId = $("#txtSedeId").val();
-    var nombre = $("#txtNombre").val();
-    var ubicacion = $("#txtUbicacion").val();
-    var complejos = $("#txtComplejos").val();
-    var presupuesto = $("#txtPresupuesto").val();
+function guardarComplejo() {
+
+    var complejoId = $("#txtComplejoId").val();
+    var nombre =  $("#txtNombre").val();
+    var sede = $("#cboSede").val();
+    var localizacion = $("#txtLocalizacion").val();
+    var jefe = $("#cboJefe").val();
+    var area = $("#txtArea").val();
 
     //Validamos que al menos el nombre sea ingresado.
-    if (!isEmpty(nombre)) {
+    if (!isEmpty(nombre) && sede != 0 && jefe != 0) {
         var data = {
-            "SedeId": sedeId,
+            "ComplejoId": complejoId,
             "Nombre": nombre,
-            "Ubicacion": ubicacion,
-            "Complejos": complejos,
-            "Presupuesto": presupuesto
+            "Sede": sede,
+            "Localizacion": localizacion,
+            "Jefe": jefe,
+            "Area": area
         };
 
         $.ajax({
             type: "POST",
-            url: sPath + "Sede/SaveSede",
+            url: sPath + "Complejo/SaveComplejo",
             dataType: "json",
             data: data,
             success: function (resultado) {
@@ -176,21 +206,21 @@ function guardarSede() {
 
                     $(document).Toasts('create', {
                         class: 'bg-success',
-                        title: "Registro de sedes",
-                        body: "Se guardÃ³ correctamente los datos de la sede. ",
+                        title: "Registro de complejos",
+                        body: "Se guardó correctamente los datos del complejo. ",
                         autohide: true,
                         delay: 3000,
                         fade: true
                     });
 
-                    $("#modalFormSede").modal("hide");
-                    loadSedes();
+                    $("#modalFormComplejo").modal("hide");
+                    loadComplejos();
 
                 } else {
                     $(document).Toasts('create', {
                         class: 'bg-warning',
-                        title: "Error al guardar la sede.",
-                        body: "OcurriÃ³ un error al intentar guardar el registro. ",
+                        title: "Error al guardar el complejo.",
+                        body: "Ocurrió un error al intentar guardar el registro. ",
                         autohide: true,
                         delay: 3000,
                         fade: true
@@ -201,8 +231,8 @@ function guardarSede() {
     } else {
         $(document).Toasts('create', {
             class: 'bg-warning',
-            title: "ValidaciÃ³n.",
-            body: "Debe ingresar un nombre para la sede. ",
+            title: "Validacion. ",
+            body: "Debe ingresar los datos completos. ",
             autohide: true,
             delay: 3000,
             fade: true
@@ -210,26 +240,26 @@ function guardarSede() {
     }
 }
 
-function eliminarSede(SedeId) {
+function eliminarComplejo(ComplejoId) {
 
     Swal.fire({
-        title: 'Â¿EstÃ¡ seguro de eliminar este registro?',
-        text: "No se podrÃ¡ revertir el cambio.",
+        title: '¿Esta seguro de eliminar este registro?',
+        text: "No se podra revertir el cambio.",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'SÃ­, eliminar',
+        confirmButtonText: 'Si, eliminar',
         cancelButtonText: 'Cancelar',
     }).then((result) => {
         if (result.isConfirmed) {
 
             var data = {
-                "SedeId": SedeId
+                "ComplejoId": ComplejoId
             };
             $.ajax({
                 type: "POST",
-                url: sPath + "Sede/DeleteSede",
+                url: sPath + "Complejo/DeleteComplejo",
                 dataType: "json",
                 data: data,
                 async: true,
@@ -238,14 +268,14 @@ function eliminarSede(SedeId) {
                     if (resultado == "ok") {
                         $(document).Toasts('create', {
                             class: 'bg-success',
-                            title: "ActualizaciÃ³n",
-                            body: "EliminaciÃ³n realizada correctamente ",
+                            title: "Actualización",
+                            body: "Eliminación realizada correctamente. ",
                             autohide: true,
                             delay: 3000,
                             fade: true
                         });
 
-                        loadSedes();
+                        loadComplejos();
                     }
                 }
             });
@@ -253,4 +283,3 @@ function eliminarSede(SedeId) {
         }
     });
 }
-

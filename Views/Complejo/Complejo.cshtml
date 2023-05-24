@@ -47,7 +47,7 @@
     <h1>COMPLEJOS DEPORTIVOS</h1>
     <br />
 
-    <btn class="btn btn-success" onclick="verModalSede();"> Registrar complejo</btn>
+    <btn class="btn btn-success" onclick="verModalComplejo();"> Registrar complejo</btn>
 
 </div>
 
@@ -57,7 +57,7 @@
 
 <br />
 <div class="col-md-12">
-    <table id="sedeTable" class="table table-bordered table-hover table-sm display nowrap" style="width: 100%;">
+    <table id="complejoTable" class="table table-bordered table-hover table-sm display nowrap" style="width: 100%;">
         <thead>
             <tr>
                 <th style='text-align:center;'>Id</th>
@@ -74,7 +74,7 @@
 <br />
 
 
-<div id="modalFormSede" class="modal fade" role="dialog" aria-hidden="true" style="display: none; overflow: scroll;">
+<div id="modalFormComplejo" class="modal fade" role="dialog" aria-hidden="true" style="display: none; overflow: scroll;">
 
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -88,8 +88,8 @@
 
                 <div class="row" hidden>
                     <div class="form-group col-md-6">
-                        <label for="txtSedeId">SedeId: </label>
-                        <input id="txtSedeId" class="form-control text-sm" type="text" disabled>
+                        <label for="txtComplejoId">ComplejoId: </label>
+                        <input id="txtComplejoId" class="form-control text-sm" type="text" disabled>
                     </div>
                 </div>
 
@@ -99,25 +99,33 @@
                         <input type="text" class=" form-control text-sm" id="txtNombre" name="nombre" placeholder="Ingrese el nombre" />
                     </div>
                     <div class="form-group col-md-6 ">
-                        <label for="txtUbicacion">Ubicación: </label>
-                        <input type="text" class=" form-control text-sm" id="txtUbicacion" name="ubicacion" placeholder="Ingrese la ubicación" />
+                        <label for="cboSede">Sede: </label>
+                        <select id="cboSede" name="cboSede" class="form-control form-control-sm">
+                        </select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-md-6 ">
-                        <label for="txtComplejos">N° Complejos: </label>
-                        <input type="number" class=" form-control text-sm" id="txtComplejos" name="nroComplejos" placeholder="Ingrese la cantidad" />
+                        <label for="txtLocalizacion">Localización: </label>
+                        <input type="text" class=" form-control text-sm" id="txtLocalizacion" name="localizacion" placeholder="Ingrese la localización" />
                     </div>
                     <div class="form-group col-md-6 ">
-                        <label for="txtPresupuesto">Presupuesto: </label>
-                        <input type="number" class=" form-control text-sm" id="txtPresupuesto" name="presupuesto" placeholder="Ingrese el presupuesto" />
+                        <label for="cboJefe">Jefe: </label>
+                        <select id="cboJefe" name="cboJefe" class="form-control form-control-sm">
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-6 ">
+                        <label for="txtArea">Área total: </label>
+                        <input type="number" class=" form-control text-sm" id="txtArea" name="area" placeholder="Ingrese el área" />
                     </div>
                 </div>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" onclick="guardarSede();">Guardar</button>
+                <button type="button" class="btn btn-success" onclick="guardarComplejo();">Guardar</button>
             </div>
         </div>
     </div>
@@ -143,7 +151,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- ScriptJs -->
-    <script src="~/js/sede.js"></script>
+    <script src="~/js/complejo.js"></script>
 
     <script type="text/javascript">
 
@@ -151,7 +159,7 @@
 
             docStart('@Url.Content("~/")');
 
-            loadSedes();
+            loadComplejos();
 
         });
 

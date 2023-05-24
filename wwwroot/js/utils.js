@@ -219,7 +219,7 @@ var select2 = {
     },
     cargarSeleccione: function (id, data, val, text, textSeleccione) {//REV.
         $("#" + id).empty();
-        $('#' + id).append('<option value="">' + textSeleccione + '</option>');
+        $('#' + id).append('<option value="0">' + textSeleccione + '</option>');
         if (!isEmpty(data)) {
             if (isArray(text)) {
                 var sText;
